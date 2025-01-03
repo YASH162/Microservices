@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.shincha.microservice.product.exceptions.ProductNotFoundException;
 import com.shincha.microservice.product.exceptions.ProductAlreadyExistsException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,10 +30,12 @@ public class ProductService {
 
     public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll(); // Get all products from DB
-        if (((List<?>) products).isEmpty()) {
-            throw new ProductNotFoundException("No products found.");
+        // Return empty list instead of throwing exception if no products found
+        if (products.isEmpty()) {
+            return Collections.emptyList(); // Return an empty list
         }
-        return products.stream() // Convert list of Product to list of ProductDTO
+        // Convert list of Product to list of ProductDTO
+        return products.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
