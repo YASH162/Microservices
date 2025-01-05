@@ -44,12 +44,12 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<String> deleteProduct(@PathVariable int id) {
         boolean isDeleted = productService.deleteProduct(id);
         if (isDeleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 No Content on successful deletion
+            return new ResponseEntity<>("Product Deleted Successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found if product to delete does not exist
+        return new ResponseEntity<>("Product not exisit",HttpStatus.NOT_FOUND); // 404 Not Found if product to delete does not exist
     }
 
     @DeleteMapping("/deleteAll")
