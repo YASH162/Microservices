@@ -4,6 +4,8 @@ import com.shincha.microservice.product.model.Product;
 import com.shincha.microservice.product.dto.ProductDTO;
 import com.shincha.microservice.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import com.shincha.microservice.product.exceptions.ProductNotFoundException;
 import com.shincha.microservice.product.exceptions.ProductAlreadyExistsException;
@@ -23,6 +25,9 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+
+
+    @Cacheable(value = "products", key = "#id")
     public ProductDTO getProductById(int id) {
         logger.info("Fetching product with ID: {}", id);
         Product product = productRepository.findById(id);
@@ -35,6 +40,7 @@ public class ProductService {
         }
     }
 
+    @Cacheable(value = "products", key = "'all'")
     public List<ProductDTO> getAllProducts() {
         logger.info("Fetching all products");
         List<Product> products = productRepository.findAll();
@@ -48,6 +54,8 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+
+    @Cacheable(value = "products", key = "#name")
     public ProductDTO getProductByName(String name) {
         logger.info("Fetching product with name: {}", name);
         Product product = productRepository.findByName(name);
@@ -60,6 +68,8 @@ public class ProductService {
         }
     }
 
+
+    @CacheEvict(value = "products", key = "'all'") // Evicts cache for all products
     public ProductDTO updateProduct(ProductDTO productDTO) {
         logger.info("Updating product with ID: {}", productDTO.getProductID());
         Product existingProduct = productRepository.findById(productDTO.getProductID());
@@ -80,6 +90,8 @@ public class ProductService {
         }
     }
 
+
+    @CacheEvict(value = "products", key = "'all'")
     public ProductDTO saveProduct(ProductDTO productDTO) {
         logger.info("Saving new product with ID: {}", productDTO.getProductID());
         Optional<Product> existingProduct = Optional.ofNullable(productRepository.findById(productDTO.getProductID()));
@@ -93,6 +105,7 @@ public class ProductService {
         return convertToDTO(savedProduct);
     }
 
+    @CacheEvict(value = "products", key = "#id")
     public boolean deleteProduct(int id) {
         logger.info("Deleting product with ID: {}", id);
         Optional<Product> product = Optional.ofNullable(productRepository.findById(id));
@@ -106,6 +119,8 @@ public class ProductService {
         }
     }
 
+
+    @CacheEvict(value = "products", key = "'all'")
     public void deleteAllProducts() {
         logger.info("Deleting all products");
         productRepository.deleteAll();

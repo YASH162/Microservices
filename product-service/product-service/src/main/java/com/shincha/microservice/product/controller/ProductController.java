@@ -20,7 +20,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> getProducts() {
         List<ProductDTO> products = productService.getAllProducts();
         if (products.isEmpty()) {
-            return new ResponseEntity<>(products,HttpStatus.NO_CONTENT); // 204 No Content if no products found
+            return new ResponseEntity<>(products, HttpStatus.NO_CONTENT); // 204 No Content if no products found
         }
         return new ResponseEntity<>(products, HttpStatus.OK); // 200 OK with the list of products
     }
@@ -37,9 +37,6 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO savedProduct = productService.saveProduct(productDTO);
-        if (savedProduct == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request if unable to save
-        }
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED); // 201 Created with the saved product
     }
 
@@ -49,7 +46,7 @@ public class ProductController {
         if (isDeleted) {
             return new ResponseEntity<>("Product Deleted Successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Product not exisit",HttpStatus.NOT_FOUND); // 404 Not Found if product to delete does not exist
+        return new ResponseEntity<>("Product not exist", HttpStatus.NOT_FOUND); // 404 Not Found if product to delete does not exist
     }
 
     @DeleteMapping("/deleteAll")

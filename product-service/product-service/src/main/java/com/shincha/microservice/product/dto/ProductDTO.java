@@ -2,9 +2,10 @@ package com.shincha.microservice.product.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ProductDTO {
+public class ProductDTO implements Serializable {
 
     private int productID;
     private String name;
